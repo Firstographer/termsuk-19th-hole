@@ -773,7 +773,7 @@
                             <button
                                 class="btn btn-outline-success w-100 fw-bold rounded-pill border-2 py-3 shadow-sm d-flex align-items-center justify-content-center gap-2"
                                 onclick="selectCustomCourseDirect()">
-                                <span>⛳</span> หาสนามไม่เจอ ? สร้างสนามใหม่
+                                <span>⛳</span> ไม่พบสนามที่ต้องการ? กำหนดสนามด้วยตนเอง
                             </button>
                         </div>
                     </div>
@@ -905,6 +905,7 @@
                             <span class="fw-bold" id="currentParText"
                                 style="font-size: clamp(1.2rem, 4.5vw, 1.8rem); color: var(--accent-gold-light);">PAR
                                 4</span>
+                            <span id="currentHoleStatusBadge" class="badge rounded-pill fw-bold px-2 py-1" style="font-size: 0.75rem;">-</span>
                         </div>
                         <div class="text-white-50 fw-semibold d-flex align-items-center gap-2 mt-1 text-truncate"
                             style="font-size: 0.85rem; min-width: 0;">
@@ -941,7 +942,7 @@
                         <div class="col-9" id="nextBtnContainer">
                             <button
                                 class="btn btn-success btn-lg w-100 rounded-pill shadow-sm mb-2 fw-bold py-3 d-flex align-items-center justify-content-center gap-2"
-                                onclick="showHoleSummary()"><span>💾 บันทึก & ถัดไป</span> <span>➔</span></button>
+                                onclick="showHoleSummary()"><span>💾 บันทึกสกอร์</span></button>
                         </div>
 
                         <div class="col-4">
@@ -956,7 +957,7 @@
                         <div class="col-4">
                             <button
                                 class="btn btn-outline-danger w-100 rounded-pill fw-bold py-2 border-2 text-truncate"
-                                onclick="confirmEndGame()">🛑 จบเกม</button>
+                                onclick="confirmEndGame()">🏁 จบการแข่งขัน</button>
                         </div>
                     </div>
                 </div>
@@ -970,7 +971,7 @@
                     <button
                         class="btn btn-outline-success btn-lg w-100 rounded-pill shadow-sm fw-bold py-3 border-2 mb-2"
                         onclick="returnToPlayToEdit()">
-                        ✏️ กลับไปแก้ไขสกอร์ / เล่นต่อ
+                        ✏️ ย้อนกลับไปแก้ไขคะแนน / แข่งขันต่อ
                     </button>
                 </div>
 
@@ -1009,7 +1010,7 @@
                     <div class="card-body p-3 bg-light rounded-bottom-4">
                         <div id="netBalanceCards" class="row g-2 mb-3"></div>
                         <hr class="my-3 border-secondary">
-                        <h6 class="text-muted fw-bold small mb-2">🧾 บิลสรุปยอดหนี้ที่ต้องเคลียร์ตอนจบ:</h6>
+                        <h6 class="text-muted fw-bold small mb-2">🧾 สรุปยอดชำระสุทธิ (Net Settlement):</h6>
                         <div id="debtList"></div>
                     </div>
                 </div>
@@ -1124,16 +1125,16 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content rounded-4 border-0 shadow-lg">
                 <div class="modal-header bg-warning text-dark border-bottom-0 py-3">
-                    <h5 class="modal-title fw-bold" id="holeSummaryTitle">💰 สรุปยอดเดิมพันหลุมนี้</h5>
+                    <h5 class="modal-title fw-bold" id="holeSummaryTitle">💰 สรุปยอดเดิมพันประจำหลุม</h5>
                 </div>
                 <div class="modal-body bg-light p-3">
-                    <h6 class="text-muted text-center mb-3 small fw-bold">บิลสรุปการจ่ายเงินหลุมนี้</h6>
+                    <h6 class="text-muted text-center mb-3 small fw-bold">สรุปยอดเดิมพันประจำหลุม</h6>
                     <div id="holeDebtList"></div>
                 </div>
                 <div class="modal-footer border-top-0 p-3 bg-light rounded-bottom-4">
                     <button type="button" class="btn btn-success rounded-pill w-100 btn-lg fw-bold shadow-sm py-3"
                         id="btnProceedNextHole">
-                        ไปหลุมถัดไป ➔
+                        ✨ ยืนยันยอด & ไปหลุมถัดไป ➔
                     </button>
                 </div>
             </div>
@@ -1184,6 +1185,30 @@
                         onclick="clearAllHistory()">🗑️ ล้างประวัติทั้งหมด</button>
                     <button type="button" class="btn btn-secondary rounded-pill px-4 fw-bold"
                         data-bs-dismiss="modal">ปิด</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Match Confirm Modal -->
+    <div class="modal fade" id="endMatchModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header bg-dark text-white py-3">
+                    <h5 class="modal-title fw-bold">🏁 ยืนยันการจบการแข่งขัน</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body bg-light p-4 text-center">
+                    <h5 class="text-dark fw-bold mb-3">คุณต้องการประมวลผลสรุปยอดทั้งหมดหรือไม่?</h5>
+                    <p class="text-muted small mb-0">ระบบจะคำนวณคะแนนและยอดเดิมพัน<br>เฉพาะหลุมที่มีการบันทึกคะแนนแล้วเท่านั้น</p>
+                </div>
+                <div class="modal-footer border-0 p-3 bg-light rounded-bottom-4 flex-column gap-2">
+                    <button type="button" class="btn btn-dark rounded-pill w-100 btn-lg fw-bold shadow-sm py-3" onclick="confirmEndMatchAction()">
+                        🏆 สรุปผลการแข่งขันทั้งหมด
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary rounded-pill w-100 fw-bold py-2" data-bs-dismiss="modal">
+                        🏌️‍♂️ ยังแข่งขันไม่จบ (กลับไปหน้าเดิม)
+                    </button>
                 </div>
             </div>
         </div>
@@ -4691,6 +4716,7 @@
         let holeSummaryModalInstance = null;
         let jumpHoleModalInstance = null;
         let manageGolfersModalInstance = null;
+        let endMatchModalInstance = null;
 
         window.onload = function () {
             populateProvinces();
@@ -4704,6 +4730,7 @@
 
                     holeSummaryModalInstance = new bootstrap.Modal(document.getElementById('holeSummaryModal'));
                     jumpHoleModalInstance = new bootstrap.Modal(document.getElementById('jumpHoleModal'));
+                    endMatchModalInstance = new bootstrap.Modal(document.getElementById('endMatchModal'));
                     renderPlayHole();
                     switchSection('play-section');
                 } else {
@@ -5119,6 +5146,7 @@
             gameState.currentHoleIndex = 0;
             holeSummaryModalInstance = new bootstrap.Modal(document.getElementById('holeSummaryModal'));
             jumpHoleModalInstance = new bootstrap.Modal(document.getElementById('jumpHoleModal'));
+            endMatchModalInstance = new bootstrap.Modal(document.getElementById('endMatchModal'));
 
             saveGame();
             renderPlayHole();
@@ -5151,6 +5179,17 @@
             document.getElementById('currentParText').innerText = `PAR ${cPar}`;
             document.getElementById('currentHoleSubDisplay').innerText = `📍 ${gameState.courseName}`;
 
+            // ตรวจสอบสถานะว่าหลุมนี้บันทึกหรือยัง
+            const playedCount = gameState.players.filter(p => p.scores[currentHole] !== undefined).length;
+            const statusBadge = document.getElementById('currentHoleStatusBadge');
+            if (playedCount > 0) {
+                statusBadge.className = "badge bg-success text-white rounded-pill fw-bold px-2 py-1";
+                statusBadge.innerHTML = `✅ บันทึกแล้ว (${playedCount}/${gameState.players.length})`;
+            } else {
+                statusBadge.className = "badge bg-secondary text-white bg-opacity-75 rounded-pill fw-bold px-2 py-1";
+                statusBadge.innerHTML = `⚪ ยังไม่ได้บันทึก`;
+            }
+
             const hcBadge = document.getElementById('currentHcBadge');
             if (cHc && cHc !== '-') {
                 hcBadge.style.display = 'inline-block';
@@ -5163,13 +5202,15 @@
 
             const prevBtnContainer = document.getElementById('prevBtnContainer');
             const nextBtnContainer = document.getElementById('nextBtnContainer');
-            if (gameState.currentHoleIndex === 0) {prevBtnContainer.style.display = 'none'; nextBtnContainer.className = 'col-12';}
-            else {prevBtnContainer.style.display = 'block'; nextBtnContainer.className = 'col-9';}
+            
+            prevBtnContainer.style.display = 'block'; 
+            nextBtnContainer.className = 'col-9';
 
             const scoreContainer = document.getElementById('scoreInputs'); scoreContainer.innerHTML = '';
 
             gameState.players.forEach((p, index) => {
-                const currentScore = p.scores[currentHole] || cPar;
+                // หากยังไม่เคยบันทึกสกอร์จริง ให้แสดงค่า Par เป็นค่าเริ่มต้นไว้ปรับ แต่วิชวลจะไม่ถูกเซฟลง gameState จนกว่าจะกดบันทึก
+                const currentScore = (p.scores[currentHole] !== undefined) ? p.scores[currentHole] : cPar;
                 let statusObj = getScoreStatusText(currentScore, cPar);
                 let visScoreMinus = currentScore <= 1 ? 'visibility: hidden;' : 'visibility: visible;';
                 let maxAllowedScore = cPar + 5;
@@ -5194,26 +5235,49 @@
         }
 
         function prevHole() {
-            saveScoresToState();
-            if (gameState.currentHoleIndex > 0) {gameState.currentHoleIndex--; saveGame(); renderPlayHole();}
+            // เอาออกจากการบันทึกอัตโนมัติ ให้เปลี่ยนหลุมทันทีโดยไม่เซฟสกอร์ชั่วคราวลง p.scores
+            if (gameState.currentHoleIndex > 0) {
+                gameState.currentHoleIndex--; 
+            } else {
+                gameState.currentHoleIndex = gameState.holeSequence.length - 1;
+            }
+            saveGame(); 
+            renderPlayHole();
         }
 
         function showJumpHoleModal() {
-            saveScoresToState();
+            // เอาออกจากการบันทึกอัตโนมัติเช่นกัน
             let gridContainer = document.getElementById('jumpHoleGrid'); gridContainer.innerHTML = '';
             gameState.holeSequence.forEach((hole, idx) => {
                 let isCurrent = idx === gameState.currentHoleIndex;
-                let btnClass = isCurrent ? 'btn-dark' : 'btn-outline-dark';
                 let par = gameState.pars[hole];
                 let playedCount = gameState.players.filter(p => p.scores[hole] !== undefined).length;
-                let badgeText = playedCount > 0 ? `✅ (${playedCount} คน)` : `⚪ ยังไม่เล่น`;
+                let hasPlayed = playedCount > 0;
+
+                let btnStyle = '';
+                let textClass = '';
+                let badgeText = '';
+
+                if (isCurrent) {
+                    btnStyle = 'background-color: #0f172a; color: #ffffff; border: 2px solid var(--accent-gold);';
+                    textClass = 'text-white-50';
+                    badgeText = hasPlayed ? `✅ (${playedCount} คน)` : `⚪ กำลังเล่น`;
+                } else if (hasPlayed) {
+                    btnStyle = 'background-color: #f0fdf4; color: #047857; border: 1.5px solid #059669;';
+                    textClass = 'text-success';
+                    badgeText = `✅ บันทึกแล้ว (${playedCount} คน)`;
+                } else {
+                    btnStyle = 'background-color: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1;';
+                    textClass = 'text-muted';
+                    badgeText = `⚪ ยังไม่เล่น`;
+                }
 
                 gridContainer.innerHTML += `
                 <div class="col-4">
-                    <button class="btn ${btnClass} w-100 py-2 rounded-3 shadow-sm text-start" onclick="jumpToHole(${idx})">
+                    <button class="btn w-100 py-2 rounded-3 shadow-sm text-start" style="${btnStyle}" onclick="jumpToHole(${idx})">
                         <div class="fw-bold">Hole ${hole}</div>
-                        <div style="font-size: 0.75rem;" class="${isCurrent ? 'text-white-50' : 'text-muted'}">Par ${par}</div>
-                        <div style="font-size: 0.7rem;" class="${isCurrent ? 'text-warning' : 'text-success'}">${badgeText}</div>
+                        <div style="font-size: 0.75rem;" class="${textClass}">Par ${par}</div>
+                        <div style="font-size: 0.7rem;" class="${textClass}">${badgeText}</div>
                     </button>
                 </div>`;
             });
@@ -5255,7 +5319,7 @@
             const btnPlus = document.getElementById(`score_plus_${pIndex}`);
             if (btnPlus) btnPlus.style.visibility = (v >= maxAllowedScore) ? 'hidden' : 'visible';
 
-            saveScoresToState();
+            // ไม่บันทึกลง state อัตโนมัติในทันทีที่กดบวกลบ เพื่อให้ผู้ใช้กดปุ่มบันทึกสกอร์เอง
         }
 
         function validateScoreInput(pIndex) {
@@ -5274,23 +5338,30 @@
             if (btnMinus) btnMinus.style.visibility = (v <= 1) ? 'hidden' : 'visible';
             const btnPlus = document.getElementById(`score_plus_${pIndex}`);
             if (btnPlus) btnPlus.style.visibility = (v >= maxAllowedScore) ? 'hidden' : 'visible';
-            saveScoresToState();
         }
 
         function saveScoresToState() {
+            // ฟังก์ชันนี้จะถูกเรียกเฉพาะตอนกดปุ่ม "💾 บันทึกสกอร์" เท่านั้น เพื่อบันทึกคะแนนลงใน gameState จริงๆ
             const hole = gameState.holeSequence[gameState.currentHoleIndex];
             gameState.players.forEach((p, index) => {
                 const input = document.getElementById(`score_p${index}`);
                 if (input) {let val = parseInt(input.value); p.scores[hole] = isNaN(val) || val < 1 ? 1 : val;}
             });
             saveGame();
+            
+            const playedCount = gameState.players.filter(p => p.scores[hole] !== undefined).length;
+            const statusBadge = document.getElementById('currentHoleStatusBadge');
+            if (playedCount > 0) {
+                statusBadge.className = "badge bg-success text-white rounded-pill fw-bold px-2 py-1";
+                statusBadge.innerHTML = `✅ บันทึกแล้ว (${playedCount}/${gameState.players.length})`;
+            }
         }
 
         // ==========================================
         // FINANCIAL CALCULATIONS & SUMMARY
         // ==========================================
         function renderGroupedDebtsToHTML(debtsArray, playersList) {
-            if (!debtsArray || debtsArray.length === 0) return `<div class="alert alert-success text-center border-0 fw-bold py-2 small mb-0">🎉 ทุกคนเจ๊ากัน ไม่มีใครต้องจ่าย</div>`;
+            if (!debtsArray || debtsArray.length === 0) return `<div class="alert alert-success text-center border-0 fw-bold py-2 small mb-0">🎉 ไม่มีการได้เสียในหลุมนี้ (เสมอ)</div>`;
             let groupedDebts = {};
             debtsArray.forEach(d => {if (!groupedDebts[d.from]) groupedDebts[d.from] = []; groupedDebts[d.from].push(d);});
             let html = '';
@@ -5312,9 +5383,9 @@
         function renderGroupedDebts(debtsArray, containerId) {document.getElementById(containerId).innerHTML = renderGroupedDebtsToHTML(debtsArray, gameState.players);}
 
         function showHoleSummary() {
-            saveScoresToState();
+            saveScoresToState(); // บันทึกสกอร์เมื่อกดปุ่มบันทึก
             const currentHole = gameState.holeSequence[gameState.currentHoleIndex];
-            document.getElementById('holeSummaryTitle').innerText = `💰 สรุปยอดเดิมพันหลุมที่ ${currentHole}`;
+            document.getElementById('holeSummaryTitle').innerText = `💰 สรุปยอดเดิมพันประจำหลุม ${currentHole}`;
 
             let n = gameState.players.length; let par = gameState.pars[currentHole]; let bet = gameState.bets[currentHole];
             let pairDebt = Array(n).fill(null).map(() => Array(n).fill(0));
@@ -5341,20 +5412,32 @@
 
             renderGroupedDebts(holeDebts, 'holeDebtList');
 
-            const isLastHole = gameState.currentHoleIndex === gameState.holeSequence.length - 1;
             const btn = document.getElementById('btnProceedNextHole');
-
-            if (isLastHole) {
-                btn.innerHTML = "🏆 ดูผลสรุปรวมทั้งหมด"; btn.className = "btn btn-dark rounded-pill w-100 btn-lg fw-bold shadow-sm py-3";
-                btn.onclick = function () {holeSummaryModalInstance.hide(); generateSummary();};
-            } else {
-                btn.innerHTML = "✨ ยืนยันยอด & ไปหลุมถัดไป ➔"; btn.className = "btn btn-success rounded-pill w-100 btn-lg fw-bold shadow-sm py-3";
-                btn.onclick = function () {holeSummaryModalInstance.hide(); gameState.currentHoleIndex++; saveGame(); renderPlayHole();};
-            }
+            btn.innerHTML = "✨ ยืนยันยอด & ไปหลุมถัดไป ➔"; 
+            btn.className = "btn btn-success rounded-pill w-100 btn-lg fw-bold shadow-sm py-3";
+            btn.onclick = function () {
+                holeSummaryModalInstance.hide(); 
+                if (gameState.currentHoleIndex < gameState.holeSequence.length - 1) {
+                    gameState.currentHoleIndex++; 
+                } else {
+                    gameState.currentHoleIndex = 0;
+                }
+                saveGame(); 
+                renderPlayHole();
+            };
             holeSummaryModalInstance.show();
         }
 
-        function confirmEndGame() {if (confirm("ต้องการจบเกมส์ตอนนี้เลยใช่ไหม? (หลุมที่ยังไม่เล่นจะไม่ถูกนำมาคำนวณเงิน)")) {saveScoresToState(); generateSummary();} }
+        function confirmEndGame() {
+            // ไม่อัตโนมัติเซฟ ให้ผู้ใช้กดยืนยันผ่าน modal
+            if (!endMatchModalInstance) endMatchModalInstance = new bootstrap.Modal(document.getElementById('endMatchModal'));
+            endMatchModalInstance.show();
+        }
+
+        function confirmEndMatchAction() {
+            if(endMatchModalInstance) endMatchModalInstance.hide();
+            generateSummary();
+        }
 
         function calculateAccumulatedDebts() {
             let n = gameState.players.length; let pairDebt = Array(n).fill(null).map(() => Array(n).fill(0)); let netBalances = Array(n).fill(0);
@@ -5384,7 +5467,6 @@
         }
 
         function showLeaderboard() {
-            saveScoresToState();
             let tbody = document.getElementById('leaderboardBody'); tbody.innerHTML = '';
             let {netBalances} = calculateAccumulatedDebts();
 
@@ -5542,7 +5624,7 @@
                 historyList.forEach((match, idx) => {
                     let outHoles = match.holeSequence.filter(h => h >= 1 && h <= 9); let inHoles = match.holeSequence.filter(h => h >= 10 && h <= 18);
                     let groupedDebtsHTML = renderGroupedDebtsToHTML(match.debts.finalDebts, match.players);
-                    container.innerHTML += `<div class="card mb-3 border-0 shadow-sm rounded-4"><div id="historyExportArea_${idx}" class="bg-white rounded-top-4"><div class="card-header bg-dark text-white d-flex justify-content-between align-items-center rounded-top-4"><span class="fw-bold text-truncate" style="min-width:0; flex-grow:1;">📍 ${match.courseName}</span><small class="text-white-50 flex-shrink-0 ms-2">${match.date}</small></div><div class="card-body p-2 bg-light"><div class="w-100 mb-1">${generateHistoryScorecardTable(match, outHoles, 'OUT')}</div><div class="w-100 mb-2">${generateHistoryScorecardTable(match, inHoles, 'IN')}</div><h6 class="text-muted fw-bold mb-2 mt-3 px-1">🧾 บิลสรุปยอดหนี้ที่ต้องเคลียร์:</h6><div class="bg-white p-2 rounded border">${groupedDebtsHTML}</div></div></div><div class="card-footer bg-light border-0 d-flex justify-content-between rounded-bottom-4"><button class="btn btn-info btn-sm rounded-pill px-3 text-white fw-bold shadow-sm" onclick="downloadHistoryScorecard(${idx})">📸 เซฟรูปลงเครื่อง</button><button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="deleteHistoryItem(${idx})">ลบ</button></div></div>`;
+                    container.innerHTML += `<div class="card mb-3 border-0 shadow-sm rounded-4"><div id="historyExportArea_${idx}" class="bg-white rounded-top-4"><div class="card-header bg-dark text-white d-flex justify-content-between align-items-center rounded-top-4"><span class="fw-bold text-truncate" style="min-width:0; flex-grow:1;">📍 ${match.courseName}</span><small class="text-white-50 flex-shrink-0 ms-2">${match.date}</small></div><div class="card-body p-2 bg-light"><div class="w-100 mb-1">${generateHistoryScorecardTable(match, outHoles, 'OUT')}</div><div class="w-100 mb-2">${generateHistoryScorecardTable(match, inHoles, 'IN')}</div><h6 class="text-muted fw-bold mb-2 mt-3 px-1">🧾 สรุปยอดชำระสุทธิ (Net Settlement):</h6><div class="bg-white p-2 rounded border">${groupedDebtsHTML}</div></div></div><div class="card-footer bg-light border-0 d-flex justify-content-between rounded-bottom-4"><button class="btn btn-info btn-sm rounded-pill px-3 text-white fw-bold shadow-sm" onclick="downloadHistoryScorecard(${idx})">📸 เซฟรูปลงเครื่อง</button><button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="deleteHistoryItem(${idx})">ลบ</button></div></div>`;
                 });
             }
             new bootstrap.Modal(document.getElementById('historyModal')).show();
